@@ -744,6 +744,14 @@ details.more[open] .more__body{animation:upIn .5s var(--ease-out) both}
   }
 }
 
+
+/* кнопка корзины */
+.cart-btn{gap:9px;height:42px;min-height:42px;padding:0 7px 0 14px;border:1px solid var(--gold-dim);border-radius:21px;transition:border-color .3s, background-color .3s, box-shadow .3s}
+.cart-btn__icon{width:19px;height:19px;flex:none;color:var(--gold-pale)}
+.cart-btn__count{min-width:26px;height:26px;border-radius:13px}
+.cart-btn.has-items{border-color:var(--gold);background:rgba(195,160,97,.14);box-shadow:0 0 0 3px rgba(195,160,97,.12)}
+@media (hover:hover){ .cart-btn:hover{border-color:var(--gold);background:rgba(195,160,97,.1)} }
+@media (max-width:980px){ .cart-btn{padding:0 7px 0 12px;gap:8px} }
 </style>
 </head>
 <body>
@@ -780,7 +788,7 @@ details.more[open] .more__body{animation:upIn .5s var(--ease-out) both}
     <a class="link-u nav-item" href="#reviews">Отзывы</a>
     <a class="link-u nav-item" href="#contacts">Контакты</a>
     <button class="cart-btn" type="button" data-open-cart aria-label="Корзина">
-      <span class="cart-btn__label">Корзина</span><span class="cart-btn__count" id="cart-count">0</span>
+      <svg class="cart-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M5 8.5h14l-1.3 11.5H6.3L5 8.5z"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/></svg><span class="cart-btn__label">Корзина</span><span class="cart-btn__count" id="cart-count">0</span>
     </button>
     <button class="burger" type="button" aria-label="Меню" data-open-menu><span></span></button>
   </nav>
@@ -1467,6 +1475,7 @@ details.more[open] .more__body{animation:upIn .5s var(--ease-out) both}
   }
   function renderCart(){
     $('#cart-count').textContent = count();
+    $$('.cart-btn').forEach(b => b.classList.toggle('has-items', count() > 0));
     const body = $('#cart-body');
     if (!cart.length) {
       body.innerHTML = `<div class="empty"><p>В корзине пока пусто</p><a class="btn btn--ink btn--sm" href="#afisha">Афиша</a><a class="btn btn--ink btn--sm" href="#learn">Обучение</a></div>`;
