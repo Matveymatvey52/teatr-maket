@@ -639,6 +639,10 @@ details.more[open] .more__body{animation:upIn .5s var(--ease-out) both}
 .sec--velvet .swipe-bar span{background:var(--gold)}
 @keyframes barGrow{from{transform:scaleX(.3)}to{transform:scaleX(1)}}
 
+@media (max-width:720px), (hover:none) and (pointer:coarse){
+  .drape{filter:none}
+  .drape__clip{will-change:clip-path}
+}
 @media (max-width:720px){
   .m-only{display:block}
   .d-only{display:none !important}
@@ -679,8 +683,8 @@ details.more[open] .more__body{animation:upIn .5s var(--ease-out) both}
   .filter{flex:none;padding:0 12px;font-size:13px}
   .course{padding:18px;gap:16px;margin-bottom:44px}
   .course::before{inset:8px}
-  .course__img{min-height:0;height:190px}
-  .course__img img{object-position:50% 18%}
+  .course__img{min-height:0;height:auto;aspect-ratio:4/3}
+  .course__img img{object-position:50% 28%}
   .course__kind{font-size:16px;margin-bottom:6px}
   .course__title{font-size:31px}
   .course__lead{font-size:16px;margin-top:10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -1368,10 +1372,14 @@ details.more[open] .more__body{animation:upIn .5s var(--ease-out) both}
     gsap.registerPlugin(ScrollTrigger);
     ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => head.classList.toggle('is-solid', s.scroll() > innerHeight * .6) });
     const sc = () => ({ trigger: '.stage', start: 'top top', end: 'bottom top', scrub: true });
-    gsap.to('.drape--l', { xPercent: -45, ease: 'none', scrollTrigger: sc() });
-    gsap.to('.drape--r', { xPercent: 45, ease: 'none', scrollTrigger: sc() });
-    gsap.to('.valance', { yPercent: -70, ease: 'none', scrollTrigger: sc() });
-    gsap.to('.stage__inner', { yPercent: 12, opacity: .25, ease: 'none', scrollTrigger: sc() });
+    /* параллакс занавеса только на компьютере: на телефоне он дёргается вместе с адресной строкой */
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    gsap.matchMedia().add('(min-width: 721px) and (hover: hover)', () => {
+      gsap.to('.drape--l', { xPercent: -45, ease: 'none', scrollTrigger: sc() });
+      gsap.to('.drape--r', { xPercent: 45, ease: 'none', scrollTrigger: sc() });
+      gsap.to('.valance', { yPercent: -70, ease: 'none', scrollTrigger: sc() });
+      gsap.to('.stage__inner', { yPercent: 12, opacity: .25, ease: 'none', scrollTrigger: sc() });
+    });
 
     ScrollTrigger.batch('.rv', {
       start: 'top 88%', once: true,
