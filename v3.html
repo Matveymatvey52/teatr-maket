@@ -683,8 +683,8 @@ details.more[open] .more__body{animation:upIn .5s var(--ease-out) both}
   .filter{flex:none;padding:0 12px;font-size:13px}
   .course{padding:18px;gap:16px;margin-bottom:44px}
   .course::before{inset:8px}
-  .course__img{min-height:0;height:auto;aspect-ratio:4/3}
-  .course__img img{object-position:50% 28%}
+  .course__img{min-height:0;height:auto;aspect-ratio:4/5}
+  .course__img img{object-position:50% 22%}
   .course__kind{font-size:16px;margin-bottom:6px}
   .course__title{font-size:31px}
   .course__lead{font-size:16px;margin-top:10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -1347,6 +1347,17 @@ details.more[open] .more__body{animation:upIn .5s var(--ease-out) both}
     const id = a.getAttribute('href'); if (id.length < 2) return;
     const el = $(id); if (!el) return;
     e.preventDefault(); closeMenu(); closeAll(); goTo(el);
+  });
+
+  /* ---------- картинка не догрузилась на слабой связи: пробуем ещё раз ---------- */
+  const retryImg = img => {
+    const n = +(img.dataset.retry || 0); if (n >= 4 || !/^https?:/.test(img.src)) return;
+    img.dataset.retry = n + 1;
+    setTimeout(() => { img.src = img.src.split('?')[0] + '?r=' + (n + 1); }, [1500, 3000, 6000, 10000][n]);
+  };
+  $$('img').forEach(img => {
+    img.addEventListener('error', () => retryImg(img));
+    if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) retryImg(img);
   });
 
   /* ---------- вступление идёт на CSS; скрипт лишь ускоряет его при первом действии ---------- */
